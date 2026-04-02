@@ -30,3 +30,11 @@ QML tags inluded:
     string = {character} ;
 
 """
+
+# patterns
+TAG_OPEN         = r'<[a-zA-Z]+>'                           # <quiz>, <title>, <question>, <text
+TAG_CLOSE        = r'</[a-zA-Z]+>'                          # </quiz>, </title>, </question>, </text>
+TAG_WITH_ATTR    = r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'       # <option correct="true">
+TEXT             = r'[^<]+'                                 # anything between tags
+WHITESPACE       = r'\s+'                                   # spaces, tabs, newlines
+
