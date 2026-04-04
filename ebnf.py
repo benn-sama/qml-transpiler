@@ -28,5 +28,27 @@ QML tags inluded:
 
     character = any character ;
     string = {character} ;
-
 """
+
+import re
+
+# patterns
+# TAG_OPEN         = r'<[a-zA-Z]+>'                           # <quiz>, <title>, <question>, <text
+# TAG_CLOSE        = r'</[a-zA-Z]+>'                          # </quiz>, </title>, </question>, </text>
+# TAG_WITH_ATTR    = r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'       # <option correct="true">
+# TEXT             = r'[^<]+'                                 # anything between tags
+# WHITESPACE       = r'\s+'                                   # spaces, tabs, newlines
+
+TOKEN_SPEC = [
+    ('TAG_CLOSE',      r'</[a-zA-Z]+>'),
+    ('TAG_WITH_ATTR',  r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'),
+    ('TAG_OPEN',       r'<[a-zA-Z]+>'),
+    ('TEXT',           r'[^<]+'),
+    ('WHITESPACE',     r'\s+'),
+]
+
+master_pattern = '|'.join(
+    f'(?P<{name}>{pattern})' for name, pattern in TOKEN_SPEC
+)
+
+regex = re.compile(master_pattern)
