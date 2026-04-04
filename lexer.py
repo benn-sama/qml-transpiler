@@ -6,8 +6,9 @@ class Lexer:
     ('TAG_CLOSE',      r'</[a-zA-Z]+>'),
     ('TAG_WITH_ATTR',  r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'),
     ('TAG_OPEN',       r'<[a-zA-Z]+>'),
-    ('TEXT',           r'[^<]+'),
+    ('NEWLINE',        r'\n'),
     ('WHITESPACE',     r'\s+'),
+    ('TEXT',           r'[^<]+'),
   ]
 
   # combines patterns in TOKEN_SPEC
@@ -23,8 +24,8 @@ class Lexer:
       type  = match.lastgroup
       value = match.group()
 
-      # this part ignores whitespace
-      if type == 'WHITESPACE':
+      # this part ignores whitespace and new lines
+      if type == 'WHITESPACE' or type == 'NEWLINE':
         continue
     
       tokens.append((type, value))
