@@ -15,9 +15,9 @@ class Lexer:
   master_pattern = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in TOKEN_SPEC)
   regex = re.compile(master_pattern)
 
-  # scan and extract 
-  def tokenize(self, input:str ) -> list:
-    tokens = []
+  # scan and extract (can extract all, or just one line)
+  def tokenize(self, input:str) -> tuple:
+    tokens = ()
 
     # give inputs/values and assign their types, then return list of token
     for match in self.regex.finditer(input):
@@ -28,6 +28,6 @@ class Lexer:
       if type == 'WHITESPACE' or type == 'NEWLINE':
         continue
     
-      tokens.append((type, value))
+      tokens = (type, value)
 
     return tokens

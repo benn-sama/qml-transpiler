@@ -20,14 +20,14 @@ QML tags inluded:
     quiz           = "<quiz>", quiz_block ,"</quiz>" ;
     quiz_block     = title, question, {question} ; 
 
-    title          = "<title>", string, "</title>" ;
+    title          = "<title>", text, "</title>" ;
 
     question       = "<question>", question_block, "</question>" ;
     question_block = text, option, option, {option} ;
-    option         = "<option ", {correct="true"}, ">", string, "</option"> ;
+    option         = "<option ", {correct="true"}, ">", text, "</option"> ;
 
     character = any character ;
-    string = {character} ;
+    text = {character} ;
 """
 
 import re
