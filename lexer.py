@@ -3,9 +3,9 @@ import re
 class Lexer:
   # defines patterns
   TOKEN_SPEC = [
-    ('TAG_CLOSE',      r'</[a-zA-Z]+>'),
-    ('TAG_WITH_ATTR',  r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'),
     ('TAG_OPEN',       r'<[a-zA-Z]+>'),
+    ('TAG_WITH_ATTR',  r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'),
+    ('TAG_CLOSE',      r'</[a-zA-Z]+>'),
     ('NEWLINE',        r'\n'),
     ('WHITESPACE',     r'\s+'),
     ('TEXT',           r'[^<]+'),
@@ -17,7 +17,7 @@ class Lexer:
 
   # scan and extract (can extract all, or just one line)
   def tokenize(self, input:str) -> tuple:
-    tokens = ()
+    tokens = ('NaN', 'NaN')
 
     # give inputs/values and assign their types, then return list of token
     for match in self.regex.finditer(input):
