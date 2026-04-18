@@ -5,7 +5,7 @@ class Lexer:
   TOKEN_SPEC = [
     ('TAG_OPEN',       r'<[a-zA-Z]+>'),
     ('TAG_WITH_ATTR',  r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'),
-    ('TEXT',           r'[^<]+'),
+    ('STRING',         r'[^<]+'),
     ('TAG_CLOSE',      r'</[a-zA-Z]+>'),
     ('NEWLINE',        r'\n'),
     ('WHITESPACE',     r'\s+')
