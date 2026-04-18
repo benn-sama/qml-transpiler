@@ -23,31 +23,33 @@ def test_open(lexer: Lexer):
   input = ['<quiz>', '<title>', '<question>', '<text>', '<option>']
 
   # print tuple
+  for i in input:
+    print(lexer.tokenize(i))
   
     
-  print("********************TEST_1********************")
+  print("********************TEST_1********************\n")
 
 def test_open_with_attr(lexer: Lexer):
   print("********************TEST_2********************")
 
-  input = "<title>"
+  input = """<option correct="true">"""
   
   # print tuple
   tokenized = lexer.tokenize(input)
   print(tokenized)
 
-  print("********************TEST_2********************")
+  print("********************TEST_2********************\n")
 
 def test_close(lexer: Lexer):
   print("********************TEST_3********************")
 
-  input = "<text> What is the primary purpose of a lexical analyzer? </text>"
+  input = ['</quiz>', '</title>', '</question>', '</text>', '</option>']
 
-  # print tuple
-  tokenized = lexer.tokenize(input)
-  print(tokenized)
+  # print
+  for i in input:
+    print(lexer.tokenize(i))
   
-  print("********************TEST_3********************")
+  print("********************TEST_3********************\n")
 
 if __name__ == "__main__":
   lexer = Lexer()
