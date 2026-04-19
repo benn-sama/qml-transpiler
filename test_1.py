@@ -1,8 +1,5 @@
 from lexer import Lexer
-
-def test_1(lexer: Lexer):
-  print("********************TEST_1********************")
-  input = """<quiz>
+"""<quiz>
     <title> Programming Languages Midterm </title>
     
     <question>
@@ -20,46 +17,43 @@ def test_1(lexer: Lexer):
     </question>
 </quiz>"""
 
-  tokenized = lexer.tokenize(input)
-  
-  for t in tokenized:
-    print(t)
-    
+
+def test_open(lexer: Lexer):
   print("********************TEST_1********************")
+  input = ['<quiz>', '<title>', '<question>', '<text>', '<option>']
 
-def test_2(lexer: Lexer):
+  # print tuple
+  for i in input:
+    print(lexer.tokenize(i))
+  
+    
+  print("********************TEST_1********************\n")
+
+def test_open_with_attr(lexer: Lexer):
   print("********************TEST_2********************")
 
-  input = """<quiz>
-    <title> Programming Languages Midterm </title>
-
-    <question>
-        <text> What is the primary purpose of a lexical analyzer? </text>
-    </question>
-</quiz>"""
+  input = """<option correct="true">"""
   
+  # print tuple
   tokenized = lexer.tokenize(input)
-  for t in tokenized:
-    print(t)
+  print(tokenized)
 
-  print("********************TEST_2********************")
+  print("********************TEST_2********************\n")
 
-def test_3(lexer: Lexer):
+def test_close(lexer: Lexer):
   print("********************TEST_3********************")
 
-  input = """<quiz>
-  <title> Programming Languages Midterm </title>
-</quiz>"""
+  input = ['</quiz>', '</title>', '</question>', '</text>', '</option>']
 
-  tokenized = lexer.tokenize(input)
-  for t in tokenized:
-    print(t)
+  # print
+  for i in input:
+    print(lexer.tokenize(i))
   
-  print("********************TEST_3********************")
+  print("********************TEST_3********************\n")
 
 if __name__ == "__main__":
   lexer = Lexer()
   
-  test_1(lexer)
-  test_2(lexer)
-  test_3(lexer)
+  test_open(lexer)
+  test_open_with_attr(lexer)
+  test_close(lexer)
