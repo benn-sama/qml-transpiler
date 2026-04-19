@@ -43,7 +43,7 @@ TOKEN_SPEC = [
     ('TAG_CLOSE',      r'</[a-zA-Z]+>'),
     ('TAG_WITH_ATTR',  r'<[a-zA-Z]+\s+[a-zA-Z]+="[^"]*">'),
     ('TAG_OPEN',       r'<[a-zA-Z]+>'),
-    ('TEXT',           r'[^<]+'),
+    ('STRING',           r'[^<]+'),
     ('WHITESPACE',     r'\s+'),
 ]
 

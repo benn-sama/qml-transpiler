@@ -1,29 +1,51 @@
 from typing import overload
 import re
+import logging
 
 from lexer import Lexer
 
 # stupid python overloading :'(
 @overload
 def expect(input, exp1) -> None: ...
+
 @overload
 def expect(input, exp1, exp2) -> None: ...
+
 def expect(input, exp1, exp2=None) -> None:
-    if exp2 is None:
+    if exp2 is None: # checks if some exp2 has passed to the function 
         if input != exp1:
             raise Exception(f"\nExpected: {exp1}\n Got: {input}")
-    else:
+    else:            # assumes some exp2 exists
         if input != exp1 and input != exp2:
             raise Exception(f"\nExpected: {exp1} OR {exp2}\n Got: {input}")
 
 # obviously this is the parser
 class Parser:
   def __init__(self, debug=False) -> None:
-    self.lexer = Lexer()
-    self.tokens = []
-    self.index = -1
+    self.lexer          = Lexer()
+    self.tokens         = []
+    self.index          = -1
     self.current_lexeme = tuple
-    self.debug = debug
+    self.logger         = logging.getLogger(__name__) # init python logger
+
+    if debug: 
+      logging.basicConfig(level=logging.DEBUG) # allows logger to actually print logs here
+
+      self.logger.debug(
+         "\nParser class initialized\n" \
+         "---Instance Variables---\n" \
+         "lexer = %s\n" \
+         "tokens = %s\n" \
+         "index = %s\n" \
+         "current_lexeme = %s\n" \
+         "logger = %s\n",
+         type(self.lexer),
+         type(self.tokens),
+         self.index,
+         type(self.current_lexeme),
+         type(self.logger)
+      )
+
 
   # tokenizes the whole file 
   def tokenize_file(self, file: str):
@@ -60,7 +82,7 @@ class Parser:
 
     self.current_lexeme = self.lexer.tokenize(current_token)
 
-  # ---------- FOR TESTING ----------
+  # ---------- THIS FUNCTION IS FOR TESTING TOKENIZER ----------
   def print(self):
     print(self.tokens)
 
@@ -68,56 +90,57 @@ class Parser:
   def quiz(self):
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in quiz()")
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nquiz(): Just started - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
-    # <quiz>
     self.get_next_lexeme()
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\nquiz(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
+    # <quiz>
     expect(self.current_lexeme, ('TAG_OPEN', '<quiz>'))
 
     self.get_next_lexeme()
 
-      # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    # ------ DEBUG ------
+    self.logger.debug(
+      "\nGot next lexeme\nquiz(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.quiz_block()
-    # </quiz>
-    # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
 
+    # ------ DEBUG ------
+    self.logger.debug(
+      "\nquiz(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
+
+    # </quiz>
     expect(self.current_lexeme, ('TAG_CLOSE', '</quiz>'))
   
   # quiz_block = title, question, {question} ; 
   def quiz_block(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in quiz_block()")
+    self.logger.debug(
+      "\nCurrently in quiz_block()\n",
+    )
 
     self.title()
 
     self.get_next_lexeme()
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\nquiz_block(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.question()
 
@@ -127,11 +150,18 @@ class Parser:
       self.question()
       self.get_next_lexeme()
 
+      # ------ DEBUG ------
+      self.logger.debug(
+        "\nGot next lexeme\nquiz_block(): - index: %s, lexeme: %s \n",
+        self.index, self.current_lexeme
+      )
+
   # title = "<title>", text, "</title>" ;
   def title(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in title()")
+    self.logger.debug(
+      "\nCurrently in title()\n"
+    )
 
     # <title>
     expect(self.current_lexeme, ('TAG_OPEN', '<title>'))
@@ -139,10 +169,10 @@ class Parser:
     self.get_next_lexeme()
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\ntitle(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.string()
 
@@ -152,18 +182,20 @@ class Parser:
   # = "<question>", question_block, "</question>" ;
   def question(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in question()")
+    self.logger.debug(
+      "\nCurrently in question()\n"
+    )
 
     # <question>
     expect(self.current_lexeme, ('TAG_OPEN', '<question>'))
 
     self.get_next_lexeme()
+
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\nquestion(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.question_block()
 
@@ -173,26 +205,29 @@ class Parser:
   # question_block = text, option, option, {option} ;
   def question_block(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in question_block()")
+    self.logger.debug(
+      "\nCurrently in question_block()\n"
+    )
 
     self.text()
 
     self.get_next_lexeme()
+
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\nquestion_block(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.option()
 
     self.get_next_lexeme()
+
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\nquestion_block(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.option()
 
@@ -202,11 +237,18 @@ class Parser:
       self.option()
       self.get_next_lexeme()
 
+      # ------ DEBUG ------
+      self.logger.debug(
+        "\nGot next lexeme\nquestion_block(): - index: %s, lexeme: %s \n",
+        self.index, self.current_lexeme
+      )
+
   # option = "<option ", {correct="true"}, ">", text, "</option"> ;
   def option(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in option()")
+    self.logger.debug(
+      "\nCurrently in option()\n"
+    )
 
     # <option>
     expect(self.current_lexeme, ('TAG_OPEN', '<option>'), ('TAG_WITH_ATTR', '<option correct="true">'))
@@ -215,10 +257,10 @@ class Parser:
     self.get_next_lexeme()
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\noption(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.string()
 
@@ -228,18 +270,19 @@ class Parser:
   # text = <text>, {character}, </text> ;
   def text(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in text()")
+    self.logger.debug(
+      "\nCurrenlty in text()"
+    ) 
 
     expect(self.current_lexeme, ('TAG_OPEN', '<text>'))
 
     self.get_next_lexeme()
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\ntext(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     self.string()
     
@@ -247,37 +290,47 @@ class Parser:
 
   def string(self):
     # ------ DEBUG ------
-    if self.debug:
-      print("Currently in string()")
+    self.logger.debug(
+      "\nCurrently in string()\n"
+    )
 
     text = self.current_lexeme[0]
-    expect(text, 'TEXT')
+
+    # Type: STRING
+    expect(text, 'STRING')
 
     self.get_next_lexeme()
 
     # ------ DEBUG ------
-    if self.debug:
-      print("Got next lexeme")
-      print(f"Current counter: {self.index}")
-      print(f"Current lexeme: {self.current_lexeme}\n")
+    self.logger.debug(
+      "\nGot next lexeme\nstring(): - index: %s, lexeme: %s \n",
+      self.index, self.current_lexeme
+    )
 
     text = self.current_lexeme[0]
 
   # check if more text exists
-    while (text == 'TEXT'):
-      if self.debug:
-        print("More text detected")
-      expect(text, 'TEXT')
+    while (text == 'STRING'):
+      self.logger.debug(
+         "\nMore STRING detected"
+      )
+
+      # Type: STRING
+      expect(text, 'STRING')
       self.get_next_lexeme()
 
       # ------ DEBUG ------
-      if self.debug:
-        print("Got next lexeme")
-        print(f"Current counter: {self.index}")
-        print(f"Current lexeme: {self.current_lexeme}\n")
+      self.logger.debug(
+        "\nGot next lexeme\nstring(): - index: %s, lexeme: %s \n",
+        self.index, self.current_lexeme
+      )
 
       text = self.current_lexeme[0]
 
   # the actual main parser
   def parse(self):
+    self.logger.debug(
+       "\nParser started\n"
+    )
+
     self.quiz()
