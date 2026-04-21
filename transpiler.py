@@ -1,11 +1,10 @@
 from parser import Parser
+from nodes import Quiz
 
 class Transpiler:
   def __init__(self) -> None:
     self.parser = Parser()
-
-  def init_file(self, input: str) -> None:
-    self.parser.tokenize_file(input)
+    self.ast = Quiz
   
-  def parse(self):
-    self.parser.parse()
+  def parse(self, file: str):
+    self.ast = self.parser.parse(file)
