@@ -25,7 +25,7 @@ class Parser:
   def __init__(self, debug=False) -> None:
     self.lexer          = Lexer()
     self.tokens         = []
-    self.index          = 0
+    self.index          = -1
     self.current_lexeme = tuple
 
   # tokenizes the whole file 
@@ -56,9 +56,6 @@ class Parser:
         else:
             self.tokens.extend(value.split())
 
-    # assign current lexeme to first token
-    self.current_lexeme = self.tokens[0]
-
   # gets next lexeme 
   def get_next_lexeme(self):
     self.index += 1
@@ -68,6 +65,8 @@ class Parser:
 
   # quiz = "<quiz>", quiz_block ,"</quiz>" ;
   def quiz(self):
+    self.get_next_lexeme()
+
     # <quiz>
     expect(self.current_lexeme, ('TAG_OPEN', '<quiz>'))
 
