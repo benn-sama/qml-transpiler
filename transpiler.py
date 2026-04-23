@@ -1,11 +1,24 @@
+import json
+from dataclasses import asdict
+
 from parser import Parser
 
 class Transpiler:
   def __init__(self) -> None:
     self.parser = Parser()
-
-  def init_file(self, input: str) -> None:
-    self.parser.tokenize_file(input)
+    self.ast = None
   
-  def parse(self):
-    self.parser.parse()
+  def parse(self, file: str):
+    self.ast = self.parser.parse(file)
+
+  def print(self):
+    print(self.ast)
+
+  def json_dump(self):
+    if self.ast is None:
+      return
+    
+    return json.dumps(asdict(self.ast), indent=4)
+  
+  def print_dict(self):
+    print(asdict(self.ast)) # type: ignore

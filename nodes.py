@@ -12,8 +12,8 @@ class Option:
 # </question>
 @dataclass
 class Question:
-    text: str
-    option: list[Option]
+    text: str | None
+    options: list[Option]
 
 # <quiz>
 #   <question>
