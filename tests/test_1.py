@@ -1,4 +1,4 @@
-from lexer import Lexer
+from ..src.lexer import Lexer
 """<quiz>
     <title> Programming Languages Midterm </title>
     

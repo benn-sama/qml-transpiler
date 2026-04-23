@@ -2,8 +2,8 @@ from typing import overload
 import re
 import logging
 
-from lexer import Lexer
-from nodes import Option, Question, Quiz
+from src.lexer import Lexer
+from ..src.nodes import Option, Question, Quiz
 
 # stupid python overloading :'(
 @overload

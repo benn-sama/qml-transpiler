@@ -1,6 +1,6 @@
-from transpiler import Transpiler
+from ..tests.parser_debug import Parser
 
-def test_ast_in_transpiler():
+def tokenize_test():
   print("********************TEST_1********************")
   input = """<quiz>
     <title> Programming Languages Midterm </title>
@@ -19,14 +19,17 @@ def test_ast_in_transpiler():
         <option> To build a parse tree. </option>
     </question>
 </quiz>"""
+  
+  parser = Parser()
 
-  transpiler = Transpiler()
+  # tokenize the input
+  parser.tokenize_file(input)
 
-  transpiler.parse(input)
-  transpiler.print()
+  # prints all tokens
+  parser.print()
   print("********************TEST_1********************\n")
 
-def test_json():
+def test_ast():
   print("********************TEST_2********************")
   input = """<quiz>
     <title> Programming Languages Midterm </title>
@@ -46,18 +49,39 @@ def test_json():
     </question>
 </quiz>"""
 
-  transpiler = Transpiler()
+  parser = Parser()
+  ast = parser.parse(input)
 
-  transpiler.parse(input)
-  transpiler.print_dict()
-  print(transpiler.json_dump())
-  
-  
-
+  print(ast)
   print("********************TEST_2********************\n")
+
+def test_the_whole_damn_thing():
+  print("********************TEST_3********************")
+  input = """<quiz>
+    <title> Programming Languages Midterm </title>
+    
+    <question>
+        <text> Which programming paradigm is based on mathematical functions? </text>
+        <option> Imperative </option>
+        <option correct="true"> Functional </option>
+        <option> Object-Oriented </option>
+    </question>
+
+    <question>
+        <text> What is the primary purpose of a lexical analyzer? </text>
+        <option correct="true"> To group characters into lexemes and assign tokens. </option>
+        <option> To generate machine code. </option>
+        <option> To build a parse tree. </option>
+    </question>
+</quiz>"""
+
+  parser = Parser(True)
+  parser.parse(input)
+  print("********************TEST_3********************\n")
 
 
 
 if __name__ == "__main__":
-  test_ast_in_transpiler()
-  test_json()
+  tokenize_test()
+  test_ast()
+  test_the_whole_damn_thing()
